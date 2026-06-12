@@ -44,3 +44,40 @@ Los códigos de estado indican el resultado de una petición HTTP.
 - 500 Internal Server Error: error interno del servidor.
 
 Por motivos de seguridad no deben devolverse al cliente los errores internos reales de la base de datos.
+
+## Bases de datos relacionales
+
+Las bases de datos relacionales almacenan la información en tablas compuestas por filas y columnas. Cada tabla representa una entidad del dominio y las relaciones entre ellas se establecen mediante claves primarias y foráneas.
+
+### Tablas del proyecto
+
+#### notes
+
+- id (UUID, Primary Key)
+- title (VARCHAR)
+- content (TEXT)
+- type (VARCHAR)
+- color (VARCHAR)
+- created_at (TIMESTAMPTZ)
+- updated_at (TIMESTAMPTZ)
+
+#### checklist_items
+
+- id (UUID, Primary Key)
+- note_id (UUID, Foreign Key)
+- text (VARCHAR)
+- is_completed (BOOLEAN)
+
+#### note_tags
+
+- id (UUID, Primary Key)
+- note_id (UUID, Foreign Key)
+- tag (VARCHAR)
+
+### Relaciones
+
+notes (1) ---- (N) checklist_items
+
+notes (1) ---- (N) note_tags
+
+Al eliminar una nota, sus checklist items y etiquetas se eliminan automáticamente mediante ON DELETE CASCADE.
