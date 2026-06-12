@@ -1,0 +1,15 @@
+### GET todas las notas
+GET http://localhost:3000/api/notes
+
+###
+
+### Crear nota
+POST http://localhost:3000/api/notes
+Content-Type: application/json
+
+{
+  "title": "Primera nota de prueba",
+  "type": "note",
+  "content": "Contenido de prueba",
+  "color": "#ffffff"
+}
