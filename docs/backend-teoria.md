@@ -81,3 +81,49 @@ notes (1) ---- (N) checklist_items
 notes (1) ---- (N) note_tags
 
 Al eliminar una nota, sus checklist items y etiquetas se eliminan automáticamente mediante ON DELETE CASCADE.
+
+# INNER JOIN vs LEFT JOIN
+
+## INNER JOIN
+
+INNER JOIN solo devuelve los registros que tienen coincidencia en ambas tablas.
+
+Ejemplo:
+
+```sql
+SELECT *
+FROM notes n
+INNER JOIN checklist_items ci
+ON n.id = ci.note_id;
+```
+
+Si una nota no tiene checklist items, no aparecerá en el resultado.
+
+### Cuándo usarlo
+
+Cuando únicamente queremos registros relacionados entre ambas tablas.
+
+Por ejemplo, obtener solamente las notas que tienen tareas asociadas.
+
+---
+
+## LEFT JOIN
+
+LEFT JOIN devuelve todos los registros de la tabla izquierda y, cuando existe coincidencia, los datos de la tabla derecha.
+
+Ejemplo:
+
+```sql
+SELECT *
+FROM notes n
+LEFT JOIN checklist_items ci
+ON n.id = ci.note_id;
+```
+
+Si una nota no tiene checklist items, seguirá apareciendo en el resultado y las columnas de checklist_items tendrán valor NULL.
+
+### Cuándo usarlo
+
+Cuando queremos mostrar todas las notas independientemente de que tengan o no elementos asociados.
+
+Es el caso habitual en NoteFlow, donde una nota puede existir sin checklist items.
