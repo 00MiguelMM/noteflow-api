@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { query } from '@/lib/db';
 import { z } from 'zod';
+import { getUserFromRequest } from '@/lib/auth';
 
 const noteSchema = z.object({
   title: z.string().min(3),
@@ -9,7 +10,13 @@ const noteSchema = z.object({
   color: z.string().optional(),
 });
 
-export async function GET() {
+export async function GET(request: Request) {
+  const user = getUserFromRequest(request);
+
+  if (!user) {
+    return NextResponse.json({ error: 'No autorizado' }, { status: 401 });
+  }
+
   try {
     const notes = await query('SELECT * FROM notes ORDER BY created_at DESC');
     return NextResponse.json(notes);
@@ -19,6 +26,12 @@ export async function GET() {
 }
 
 export async function POST(request: Request) {
+  const user = getUserFromRequest(request);
+
+  if (!user) {
+    return NextResponse.json({ error: 'No autorizado' }, { status: 401 });
+  }
+
   try {
     const body = await request.json();
     const result = noteSchema.safeParse(body);
