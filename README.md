@@ -1,36 +1,274 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# NoteFlow API
 
-## Getting Started
+Backend desarrollado con Next.js, TypeScript y PostgreSQL para la aplicación móvil NoteFlow.
 
-First, run the development server:
+## Descripción
+
+Este proyecto implementa una API REST que permite gestionar notas, checklist items y etiquetas almacenadas en una base de datos PostgreSQL alojada en Neon.
+
+La API utiliza una arquitectura cliente-servidor donde la aplicación móvil consume los endpoints mediante peticiones HTTP.
+
+---
+
+# Tecnologías utilizadas
+
+- Next.js
+- TypeScript
+- PostgreSQL
+- Neon Database
+- Zod
+- Node.js
+
+---
+
+# Instalación y ejecución
+
+## 1. Clonar el repositorio
+
+```bash
+git clone <url-del-repositorio>
+```
+
+## 2. Acceder al proyecto
+
+```bash
+cd noteflow-api
+```
+
+## 3. Instalar dependencias
+
+```bash
+npm install
+```
+
+## 4. Crear archivo de variables de entorno
+
+Crear un archivo:
+
+```txt
+.env.local
+```
+
+Añadir:
+
+```env
+DATABASE_URL=postgresql://usuario:password@host/database
+```
+
+## 5. Ejecutar el servidor
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+La API estará disponible en:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```txt
+http://localhost:3000
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+---
 
-## Learn More
+# Variables de entorno
 
-To learn more about Next.js, take a look at the following resources:
+| Variable | Descripción |
+|-----------|------------|
+| DATABASE_URL | Cadena de conexión a PostgreSQL |
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+# Endpoints
 
-## Deploy on Vercel
+## Notas
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Obtener todas las notas
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```http
+GET /api/notes
+```
+
+Respuesta:
+
+```json
+[
+  {
+    "id": "uuid",
+    "title": "Mi nota",
+    "content": "Contenido",
+    "type": "note"
+  }
+]
+```
+
+---
+
+### Crear nota
+
+```http
+POST /api/notes
+```
+
+Body:
+
+```json
+{
+  "title": "Nueva nota",
+  "content": "Contenido",
+  "type": "note",
+  "color": "#ffffff"
+}
+```
+
+Respuesta:
+
+```json
+{
+  "id": "uuid",
+  "title": "Nueva nota",
+  "content": "Contenido",
+  "type": "note"
+}
+```
+
+---
+
+### Obtener nota por ID
+
+```http
+GET /api/notes/:id
+```
+
+---
+
+### Actualizar nota
+
+```http
+PATCH /api/notes/:id
+```
+
+Body:
+
+```json
+{
+  "title": "Nota actualizada"
+}
+```
+
+---
+
+### Eliminar nota
+
+```http
+DELETE /api/notes/:id
+```
+
+Respuesta:
+
+```txt
+204 No Content
+```
+
+---
+
+# Checklist Items
+
+### Obtener checklist items de una nota
+
+```http
+GET /api/notes/:id/checklist-items
+```
+
+---
+
+### Crear checklist item
+
+```http
+POST /api/notes/:id/checklist-items
+```
+
+Body:
+
+```json
+{
+  "text": "Comprar leche"
+}
+```
+
+---
+
+### Actualizar checklist item
+
+```http
+PATCH /api/checklist-items/:itemId
+```
+
+Body:
+
+```json
+{
+  "is_completed": true
+}
+```
+
+---
+
+### Eliminar checklist item
+
+```http
+DELETE /api/checklist-items/:itemId
+```
+
+Respuesta:
+
+```txt
+204 No Content
+```
+
+---
+
+# Estructura del proyecto
+
+```txt
+app/
+ └─ api/
+     ├─ notes/
+     ├─ checklist-items/
+
+lib/
+ └─ db.ts
+
+sql/
+ └─ schema.sql
+
+docs/
+ ├─ backend-teoria.md
+ ├─ seguridad-api.md
+ ├─ api-testing.md
+ └─ queries.sql
+```
+
+---
+
+# Base de datos
+
+El proyecto utiliza PostgreSQL con las siguientes tablas:
+
+- notes
+- checklist_items
+- note_tags
+
+Las relaciones se gestionan mediante claves foráneas y ON DELETE CASCADE.
+
+---
+
+# Despliegue
+
+El backend puede desplegarse en Vercel.
+
+Pasos:
+
+1. Conectar el repositorio de GitHub.
+2. Crear el proyecto en Vercel.
+3. Añadir la variable DATABASE_URL.
+4. Realizar un nuevo despliegue.
+5. Verificar el funcionamiento de los endpoints en producción.
